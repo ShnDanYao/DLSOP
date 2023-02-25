@@ -1,0 +1,67 @@
+seed: 20
+
+mlflow:
+  exp_name: 'Debug'
+  run_name: 'test'
+  #tag: 'ttt' 
+
+trainer:
+  weights_save_path: 'exps/weights' 
+  log_every_n_steps: 5
+  max_epochs:  10
+  fast_dev_run: False # (Union[int, bool]) – Runs n if set to n (int) else 1 if set to True batch(es) of train, val and test to find any bugs (ie: a sort of unit test).
+
+model: 
+  name: ORACLE
+  params:
+    num_classes: 16
+    lr: 1.0e-4
+    #fusion: bp
+
+data:
+  name: NEUdataset.IQRawset
+  params:
+
+    store: true
+
+    dataset: 
+      root_dir: "./data/NEU16/neu_m044q5210/KRI-16Devices-RawData/{}"
+      data_format: "WiFi_air_X310_{}_{}_run{}.sigmf-data"
+      Device_Id: ["3123D7B","3123D7D","3123D7E","3123D52","3123D54","3123D58","3123D64","3123D65","3123D70","3123D76","3123D78","3123D79","3123D80","3123D89","3123EFE","3124E4A"]
+  
+    dataloader:
+      type: 'train_test'
+      ratio: [0.8,0.05,0.15]
+      batch_size: 32 
+
+    train_test: 
+      dis: ['2ft'] #,'8ft','14ft','20ft','26ft','32ft','38ft','44ft','50ft','56ft','62ft' ]
+      run: [1]
+      transform: 
+        total_tran: [['normalization',{}],]
+        part_tran: [['normalization',{}],]
+      range: [0,1]
+      slicelen: 128
+      margin: 1280 # when use 1280 the time is short and the acc is the best
+
+    train: 
+      dis: ['38ft'] #,'8ft','14ft','20ft','26ft','32ft','38ft','44ft','50ft','56ft','62ft' ]
+      run: [1]
+      transform: 
+        total_tran: [['normalization',{}],]
+        part_tran: [['normalization',{}],]
+      range: [0,1]
+      slicelen: 128
+      margin: 1280
+
+    test: 
+      dis: [ '38ft'] #, '8ft' , '14ft']
+      run: [1]
+      transform: 
+        total_tran: [['normalization',{}],]
+        part_tran: [['normalization',{}],]
+      range: [0.8,1]
+      slicelen: 128
+      margin: 1280
+
+
